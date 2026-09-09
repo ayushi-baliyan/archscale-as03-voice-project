@@ -1,71 +1,127 @@
-# 🎙️ AI Voice Project Management Assistant
+# ProjectTalk — Talk to Your Project
 
-An AI-powered voice interface that allows users to interact with their project and manage tasks using natural language commands.
+AI-powered voice project management interface built for the **ArchScale Guild Intern Technology Hackathon — AS-03**.
 
-Instead of manually navigating through a project management application, users can simply speak or type commands such as:
+## 🚀 Live Demo
 
-- "Create a task called Fix login bug and assign to Ayushi"
-- "Show my tasks"
-- "Complete the task Fix login bug"
-- "Assign Fix login bug to Ayushi"
+https://archscale-as03-voice-project.vercel.app/
 
-The application understands the user's command using Google Gemini and converts it into a structured project management action.
+## 💻 GitHub Repository
 
-## 🚀 Features
+https://github.com/ayushi-baliyan/archscale-as03-voice-project
 
-- 🎤 Voice-based project management
-- 💬 Natural language text commands
-- 🤖 AI-powered command understanding with Google Gemini
-- ✅ Create tasks
-- 📋 List tasks
-- ✔️ Complete tasks
-- 👤 Assign tasks
-- 🔄 Update task status
-- 📊 Display project tasks
-- 📱 Responsive user interface
-- ⚡ Real-time task updates
+---
 
-## 🎯 Problem Statement
+## 🎯 Problem
 
-### ArchScale Guild Hackathon — AS-03
+Project management often requires users to repeatedly click through dashboards, forms, task lists and status menus.
 
-**"What if you could talk to your project?"**
+For simple actions such as creating a task, assigning it to someone, checking tasks or completing a task, this interaction can become slow and repetitive.
 
-Traditional project management systems require users to navigate multiple screens to create, update, assign, and check tasks.
+The AS-03 problem asks:
 
-This project introduces a conversational interface where users can interact with their project using natural language and voice.
+> What if you could talk to your project?
 
-The goal is to make project management faster, simpler, and more intuitive.
+ProjectTalk explores a voice-first approach where users can communicate with their project using natural language commands instead of manually navigating multiple UI controls.
 
-## 🧠 How It Works
+---
 
-The application follows this workflow:
+## 💡 Solution
 
-User Voice / Text Command
-↓
-Speech-to-Text
-↓
-Next.js API Route
-↓
-Google Gemini
-↓
-Intent & Entity Extraction
-↓
-Project Management Action
-↓
-Updated Task State
-↓
-User-Friendly Response
+ProjectTalk allows users to interact with their project using natural-language and voice commands.
 
-Gemini analyzes the user's command and extracts:
+Instead of navigating through multiple screens, users can simply type or speak a command such as:
 
-- Intent
+- Create a task
+- Assign a task
+- Complete a task
+- List project tasks
+
+The system understands the command, identifies the user's intent and extracts important entities such as:
+
 - Task
 - Assignee
 - Status
 - Project
 
-Example response:
+The application then uses this information to perform the corresponding project-management action and update the task interface.
+
+---
+
+## ✨ Key Features
+
+### 🗣️ Natural Language Commands
+
+Users can interact with the project using normal sentences instead of fixed command syntax.
+
+### 🎤 Voice Input
+
+Users can speak project-management commands using the browser's speech recognition capability.
+
+### 🤖 AI Command Understanding
+
+Google Gemini is used to understand natural-language commands and convert them into structured project-management information.
+
+### 📋 Task Management
+
+The prototype supports:
+
+- Creating tasks
+- Completing tasks
+- Assigning tasks
+- Updating task information
+- Listing project tasks
+
+### 🌐 Live Deployment
+
+The application is deployed using Vercel and can be tested directly from the browser.
+
+---
+
+## 🏗️ Architecture
+
+User
+↓
+Text / Voice Command
+↓
+ProjectTalk Frontend
+↓
+Next.js API Route
+↓
+Google Gemini
+↓
+Intent + Entity Extraction
+↓
+Project Management Action
+↓
+Updated Task UI
+
+---
+
+## 🛠️ Tech Stack
+
+- Next.js
+- React
+- TypeScript
+- Tailwind CSS
+- Google Gemini API
+- Web Speech API
+- Vercel
+
+---
+
+## 🤖 Role of AI
+
+Google Gemini is used as the natural-language command parser.
+
+For each command, Gemini identifies the relevant project-management intent and extracts entities such as:
+
+- Task name
+- Assignee
+- Status
+- Project
+
+For example, a natural-language command can be converted into structured information like:
 
 {
   "intent": "CREATE_TASK",
@@ -75,211 +131,154 @@ Example response:
   "project": null
 }
 
-## 🎤 Voice Interaction
+AI makes the interface more flexible than a fixed command system because users can express the same action using different natural-language sentences.
 
-The application uses the browser's **Web Speech API** to convert spoken commands into text.
+---
 
-A user can click the microphone button and speak naturally.
+## 🧠 Design Decisions
 
-Example command:
+### Why Voice?
 
-Create a task called Fix login bug and assign to Ayushi
+Project-management interfaces can require many clicks for simple actions. Voice provides a faster and more natural interaction method for repetitive commands.
 
-The speech is converted into text and then processed by Gemini.
+### Why Natural Language?
 
-## 💬 Supported Commands
+Users should not have to remember an exact command format. Natural language makes the interface easier and more flexible to use.
+
+### Why Next.js?
+
+Next.js provides both the frontend application and server-side API routes in the same project, making the prototype simple to develop and deploy.
+
+### Why Gemini?
+
+Gemini provides natural-language understanding that can convert user commands into structured project-management intents and entities.
+
+### Why Web Speech API?
+
+The Web Speech API provides browser-based speech recognition, allowing users to speak commands directly into the application without requiring a separate speech-to-text service.
+
+---
+
+## 📌 Example Commands
 
 ### Create a Task
 
-Create a task called Fix login bug and assign to Ayushi
+"Create a task called Fix login bug and assign to Ayushi"
 
-### Show Tasks
+### List Tasks
 
-Show my tasks
+"Show my tasks"
 
 ### Complete a Task
 
-Complete the task Fix login bug
+"Complete the task Fix login bug"
 
 ### Assign a Task
 
-Assign Fix login bug to Ayushi
+"Assign Design homepage to Ayushi"
 
-### Update a Task
+---
 
-Update Fix login bug to In Progress
+## 🔐 Environment Variables
 
-## 🛠️ Technology Stack
+Create a `.env.local` file and add your Gemini API key:
 
-### Frontend
+GEMINI_API_KEY=your_gemini_api_key
 
-- Next.js
-- React
-- TypeScript
-- Tailwind CSS
+Never commit the API key to GitHub.
 
-### Backend
+---
 
-- Next.js API Routes
-- Google Gemini API
-
-### Database / ORM
-
-- PostgreSQL
-- Prisma ORM
-- Neon PostgreSQL
-
-### Voice
-
-- Web Speech API
-
-## 📂 Project Structure
-
-archscale-as03/
-│
-├── app/
-│   ├── api/
-│   │   ├── command/
-│   │   │   └── route.ts
-│   │   └── tasks/
-│   │       └── route.ts
-│   ├── globals.css
-│   ├── layout.tsx
-│   └── page.tsx
-│
-├── components/
-│
-├── lib/
-│   └── prisma.ts
-│
-├── prisma/
-│   ├── migrations/
-│   └── schema.prisma
-│
-├── public/
-├── .gitignore
-├── next.config.mjs
-├── package.json
-├── postcss.config.mjs
-├── prisma.config.ts
-├── tsconfig.json
-└── README.md
-
-## ⚙️ Installation
+## ▶️ Run Locally
 
 Clone the repository:
 
 git clone https://github.com/ayushi-baliyan/archscale-as03-voice-project.git
 
-Navigate to the project:
+Go to the project directory:
 
-cd archscale-as03
+cd archscale-as03-voice-project
 
 Install dependencies:
 
 npm install
 
-## 🔐 Environment Variables
-
-Create a .env.local file and add:
-
-GEMINI_API_KEY=your_gemini_api_key
-
-Create a .env file and add:
-
-DATABASE_URL=your_postgresql_connection_string
-
-### Important
-
-Never commit API keys, database passwords, or other secrets to GitHub.
-
-These files are excluded through .gitignore.
-
-## ▶️ Run the Application
-
 Start the development server:
 
 npm run dev
 
-Open the application:
+Open the application in your browser:
 
 http://localhost:3000
 
-## 🗄️ Database Setup
+---
 
-The project uses Prisma ORM with PostgreSQL.
+## 🧪 Testing
 
-Run:
+The prototype was tested using both text and voice-based project commands.
 
-npx prisma migrate dev
+Tested workflows include:
 
-Then generate the Prisma client:
+- Creating a task
+- Assigning a task
+- Completing a task
+- Listing tasks
+- Processing natural-language commands
+- Voice command input
+- Live deployed application
 
-npx prisma generate
-
-## 🔄 Command Processing
-
-The command API receives the user's natural language input.
-
-Example request:
-
-{
-  "command": "Create a task called Fix login bug and assign to Ayushi"
-}
-
-Gemini processes the command and returns structured information containing the detected intent and entities.
-
-The application then performs the appropriate project management action.
-
-## 🧩 Supported Intents
-
-- CREATE_TASK
-- COMPLETE_TASK
-- LIST_TASKS
-- UPDATE_TASK
-- ASSIGN_TASK
-
-## 🌐 Deployment
-
-The application is designed to be deployed using Vercel.
-
-Required environment variable:
-
-GEMINI_API_KEY
-
-For PostgreSQL production setup:
-
-DATABASE_URL
-
-After adding the required environment variables, deploy the project and open the generated Vercel URL.
+---
 
 ## 🔮 Future Improvements
 
-- Persistent database-backed task management
-- User authentication
-- Multiple projects
-- Team member management
-- Task priorities
-- Due dates and reminders
-- Voice responses using Text-to-Speech
-- Multi-turn conversations
-- Project analytics
-- Calendar integration
-- Role-based access control
-- Better conversational context
+The current prototype focuses on demonstrating the core voice-to-command workflow.
+
+Future versions could include:
+
+- Persistent database storage
+- User authentication and authorization
+- Multiple projects and workspaces
+- Team members and role-based permissions
+- Project-specific context and conversational memory
+- Better voice feedback and text-to-speech responses
+- Confirmation before destructive actions
+- Task due dates and priorities
+- Real-time collaboration
+- Advanced task filtering and search
+- Integration with existing project-management platforms
+- More advanced conversational project queries
+- Improved error handling and fallback responses
+- Support for more voice commands and natural-language variations
+
+---
 
 ## 🏆 Hackathon
 
-Built for the **ArchScale Guild Hackathon**.
+Built for:
 
-### Challenge
+**ArchScale Guild Intern Technology Hackathon**
+
+### Problem Statement
 
 **AS-03 — What if you could talk to your project?**
 
-The project demonstrates how AI and voice interfaces can provide a more natural way to interact with project management systems.
+The prototype focuses on:
+
+- Speech-to-text
+- Speech-to-command execution
+- Intent understanding
+- Entity extraction
+
+---
 
 ## 👩‍💻 Author
 
 **Ayushi Baliyan**
 
-GitHub: https://github.com/ayushi-baliyan
+GitHub:
+
+https://github.com/ayushi-baliyan
+
+Live Project:
+
+https://archscale-as03-voice-project.vercel.app/
