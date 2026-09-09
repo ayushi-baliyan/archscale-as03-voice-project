@@ -87,63 +87,6 @@ Example:
   "project": null
 }
 🎯 Supported Commands
-Create Task
-Create a task called Fix login bug and assign to Ayushi
-List Tasks
-Show my tasks
-Complete Task
-Complete the task Fix login bug
-Assign Task
-Assign Fix login bug to Ayushi
-Update Task
-Update Fix login bug to In Progress
-📂 Project Structure
-archscale-as03/
-│
-├── app/
-│   ├── api/
-│   │   ├── command/
-│   │   │   └── route.ts
-│   │   └── tasks/
-│   │       └── route.ts
-│   │
-│   ├── globals.css
-│   ├── layout.tsx
-│   └── page.tsx
-│
-├── components/
-├── lib/
-├── prisma/
-│   └── schema.prisma
-│
-├── public/
-├── .env
-├── .env.local
-├── .gitignore
-├── package.json
-├── postcss.config.mjs
-└── README.md
-⚙️ Installation
-
-Clone the repository:
-
-git clone https://github.com/ayushi-baliyan/archscale-as03-voice-project.git
-
-Go to the project directory:
-
-cd archscale-as03
-
-Install dependencies:
-
-npm install
-🔐 Environment Variables
-
-Create a .env.local file:
-
-GEMINI_API_KEY=your_gemini_api_key
-
-Create a .env file for the database:
-
 DATABASE_URL=your_postgresql_connection_string
 
 Never commit API keys or database credentials to GitHub.
