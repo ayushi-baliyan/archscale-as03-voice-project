@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type Task = {
   id: number;
@@ -24,12 +24,44 @@ type ParsedCommand = {
   project: string | null;
 };
 
+const STORAGE_KEY = "projecttalk_tasks";
+
 export default function Home() {
   const [command, setCommand] = useState("");
   const [tasks, setTasks] = useState<Task[]>([]);
   const [response, setResponse] = useState("");
   const [loading, setLoading] = useState(false);
   const [listening, setListening] = useState(false);
+
+  // -----------------------------
+  // LOAD TASKS FROM LOCAL STORAGE
+  // -----------------------------
+  useEffect(() => {
+    try {
+      const savedTasks = localStorage.getItem(STORAGE_KEY);
+
+      if (savedTasks) {
+        const parsedTasks = JSON.parse(savedTasks);
+
+        if (Array.isArray(parsedTasks)) {
+          setTasks(parsedTasks);
+        }
+      }
+    } catch (error) {
+      console.error("Failed to load tasks:", error);
+    }
+  }, []);
+
+  // -----------------------------
+  // SAVE TASKS TO LOCAL STORAGE
+  // -----------------------------
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+    } catch (error) {
+      console.error("Failed to save tasks:", error);
+    }
+  }, [tasks]);
 
   // -----------------------------
   // VOICE INPUT
@@ -61,13 +93,16 @@ export default function Home() {
 
     recognition.onresult = (event: any) => {
       const transcript = event.results[0][0].transcript;
+
       setCommand(transcript);
       setResponse(`Heard: "${transcript}"`);
     };
 
     recognition.onerror = () => {
       setListening(false);
-      setResponse("Sorry, I couldn't understand your voice.");
+      setResponse(
+        "Sorry, I couldn't understand your voice. Please try speaking again."
+      );
     };
 
     recognition.onend = () => {
@@ -163,7 +198,10 @@ export default function Home() {
     setTasks((prev) =>
       prev.map((task) =>
         task.id === existingTask.id
-          ? { ...task, assignee: data.assignee || "Unassigned" }
+          ? {
+              ...task,
+              assignee: data.assignee || "Unassigned",
+            }
           : task
       )
     );
@@ -234,30 +272,80 @@ export default function Home() {
         }),
       });
 
-      const data = await res.json();
+      let data: any = null;
 
+      try {
+        data = await res.json();
+      } catch {
+        throw new Error(
+          "The server returned an invalid response. Please try again."
+        );
+      }
+
+      // -----------------------------
+      // BETTER API ERROR HANDLING
+      // -----------------------------
       if (!res.ok || !data.success) {
-        throw new Error(data.error || "Command processing failed");
+        const errorMessage = String(data?.error || "").toLowerCase();
+
+        if (res.status === 429 || errorMessage.includes("quota")) {
+          setResponse(
+            "AI request limit has been reached. Please wait for the Gemini quota to reset and try again."
+          );
+          return;
+        }
+
+        if (res.status >= 500) {
+          setResponse(
+            "The AI service is temporarily unavailable. Please try again in a moment."
+          );
+          return;
+        }
+
+        setResponse(
+          data?.error ||
+            "The command could not be processed. Please try again."
+        );
+        return;
       }
 
       let parsed: ParsedCommand;
 
-      if (typeof data.result === "string") {
-        let cleaned = data.result.trim();
+      try {
+        if (typeof data.result === "string") {
+          let cleaned = data.result.trim();
 
-        cleaned = cleaned
-          .replace(/^```json\s*/i, "")
-          .replace(/^```\s*/i, "")
-          .replace(/\s*```$/i, "")
-          .trim();
+          cleaned = cleaned
+            .replace(/^```json\s*/i, "")
+            .replace(/^```\s*/i, "")
+            .replace(/\s*```$/i, "")
+            .trim();
 
-        parsed = JSON.parse(cleaned);
-      } else {
-        parsed = data.result;
+          parsed = JSON.parse(cleaned);
+        } else {
+          parsed = data.result;
+        }
+      } catch (parseError) {
+        console.error("AI response parsing error:", parseError);
+
+        setResponse(
+          "I understood your request, but the AI returned an invalid response. Please try again."
+        );
+        return;
       }
 
       console.log("Parsed command:", parsed);
 
+      if (!parsed || !parsed.intent) {
+        setResponse(
+          "I couldn't understand the requested project action. Please try again."
+        );
+        return;
+      }
+
+      // -----------------------------
+      // EXECUTE COMMAND
+      // -----------------------------
       switch (parsed.intent) {
         case "CREATE_TASK":
           createTask(parsed);
@@ -296,7 +384,7 @@ export default function Home() {
       console.error("Command error:", error);
 
       setResponse(
-        "Sorry, I couldn't process that command. Please try again."
+        "Unable to connect to the AI service right now. Please check your connection and try again."
       );
     } finally {
       setLoading(false);
